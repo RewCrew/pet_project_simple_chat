@@ -13,6 +13,9 @@ class ChatsRepo(ABC):
     @abstractmethod
     def add(self, chat:Chat):
         pass
+    @abstractmethod
+    def get_by_id(self, id:int):
+        pass
 
 class MessagesRepo(ABC):
     @abstractmethod
