@@ -14,6 +14,10 @@
 (Delete chat) as dchat
 (Block user) as buser
 (Add user in chat) as auser
+(Get info about chat) as info
+(Send message) as send_message
+(Exit from chat) as exit
+
 
 
 guest-->login
@@ -23,9 +27,9 @@ cchat --> admin
 
 user -d-> logoff
 user -d-> cchat
-'user -d->
-'user -d->
-'user -d->
+user -d-> info
+user -d-> send_message
+user -d-> exit
 'user -d->
 'user -d->
 
