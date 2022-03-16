@@ -1,42 +1,44 @@
 @startuml
+title Precedents DIAG
+
 :Guest: as guest
 :User: as user
 :BlockedUser: as blocked_user
 :Chat Admin: as admin
 
-
+left to right direction
 
 (Login) as login
 (Register) as register
 (Logoff) as logoff
+
+(Get info about chat) as info
+(Send message) as send_message
+(Exit from chat) as exit
+(Get chat history) as history
 (Create chat) as cchat
 (Update chat) as uchat
 (Delete chat) as dchat
 (Block user) as buser
 (Add user in chat) as auser
-(Get info about chat) as info
-(Send message) as send_message
-(Exit from chat) as exit
-(Get chat history) as history
-
 
 guest-->login
 guest-->register
 
+
+user --> logoff
+user --> cchat
+user --> info
+user --> send_message
+user --> exit
+
+
+admin --> uchat
+admin --> dchat
+admin --> buser
+admin --> auser
+
 blocked_user-->history
-
-user -d-> logoff
-user -d-> cchat
-user -d-> info
-user -d-> send_message
-user -d-> exit
-
-
-admin -u-> uchat
-admin -u-> dchat
-admin -u-> buser
-admin -u-> auser
-
 
 @enduml
 
