@@ -1,0 +1,41 @@
+@startuml
+:Guest: as guest
+:User: as user
+:BlockedUser: as blocked_user
+:Chat Admin: as admin
+
+
+
+(Login) as login
+(Register) as register
+(Logoff) as logoff
+(Create chat) as cchat
+(Update chat) as uchat
+(Delete chat) as dchat
+(Block user) as buser
+(Add user in chat) as auser
+
+
+guest-->login
+login --> user
+guest-->register
+cchat --> admin
+
+user -d-> logoff
+user -d-> cchat
+'user -d->
+'user -d->
+'user -d->
+'user -d->
+'user -d->
+
+
+admin -u-> uchat
+admin -u-> dchat
+admin -u-> buser
+admin -u-> auser
+'admin -u->
+'admin -u->
+
+@enduml
+
