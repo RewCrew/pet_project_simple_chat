@@ -17,29 +17,26 @@
 (Get info about chat) as info
 (Send message) as send_message
 (Exit from chat) as exit
-
+(Get chat history) as history
 
 
 guest-->login
-login --> user
 guest-->register
-cchat --> admin
+
+blocked_user-->history
 
 user -d-> logoff
 user -d-> cchat
 user -d-> info
 user -d-> send_message
 user -d-> exit
-'user -d->
-'user -d->
 
 
 admin -u-> uchat
 admin -u-> dchat
 admin -u-> buser
 admin -u-> auser
-'admin -u->
-'admin -u->
+
 
 @enduml
 
