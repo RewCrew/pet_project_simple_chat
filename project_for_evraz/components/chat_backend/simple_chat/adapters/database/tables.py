@@ -20,7 +20,7 @@ users = Table(
     Column('email', String, nullable=True)
 )
 
-chat = Table(
+chats = Table(
     'chats',
     Column('chat_id', Integer, primary_key=True, autoincrement=True),
     Column('chat_title', String, nullable=False),
@@ -38,7 +38,7 @@ messages = Table(
 
 chat_users =Table(
     'chat_users',
-    Column('chat_users_id', Integer, primary_key=True, autoincrement=True),
+    Column('id', Integer, primary_key=True, autoincrement=True),
     Column('chat_id', Integer, ForeignKey('chats.chats_id'), nullable=False),
     Column('user_id', Integer, ForeignKey('users.id'), nullable=False)
 
