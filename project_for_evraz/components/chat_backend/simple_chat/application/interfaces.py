@@ -32,7 +32,7 @@ class ChatUsersRepo(ABC):
         pass
 
     @abstractmethod
-    def get_by_id_user(self, user_id:int)-> Optional[ChatUsers]:
+    def get_by_id_user(self, user_id:int)-> Optional[List[Chat]]:
         pass
 
     @abstractmethod

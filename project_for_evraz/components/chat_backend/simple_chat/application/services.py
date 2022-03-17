@@ -61,6 +61,8 @@ class UserService:
 @component
 class ChatService:
     chats_repo: interfaces.ChatsRepo
+    chats_users_repo: interfaces.ChatUsersRepo
+    messages_repo: interfaces.MessagesRepo
 
     @join_point
     @validate_arguments
@@ -68,3 +70,9 @@ class ChatService:
         chat = self.chats_repo.get_by_id(id)
         users_list = chat.users_list  # ????
         return users_list
+
+    @join_point
+    @validate_with_dto
+    def add_chat(self, chat_info: ChatInfo):
+        new_chat = chat_info.create_obj(Chat)
+        self.chats_repo.add(new_chat)
