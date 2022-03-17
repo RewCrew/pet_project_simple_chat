@@ -8,14 +8,14 @@ hide circle
 
 
 entity message {
-    * **message_id**: int
+    * **message_id**: int PK
     message_text: str
-    * **sent_from**: user_id
+    * **sent_from**: user_id FK
     sent_date: datetime.datetime
     }
 
 entity chat {
-    * **chat_id**: int
+    * **chat_id**: int PK
     chat_title: str
     * **creator**: user_id
 
@@ -28,13 +28,15 @@ entity user {
 }
 
 entity chat_messages{
-    * **message_id**
-    * **chat_id**
+    * **chat_messages_id** PK
+    * **message_id** FK
+    * **chat_id** FK
 }
 
 entity chat_users{
-    * **chat_id**
-    * **user_id**
+    * **chat_users_id** PK
+    * **chat_id** FK
+    * **user_id** FK
 }
 
 chat_messages ||--|| message
