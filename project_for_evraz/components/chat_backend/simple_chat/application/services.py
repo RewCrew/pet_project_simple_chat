@@ -88,7 +88,7 @@ class ChatService:
     @validate_with_dto
     def update_chat(self, chat_info: ChatInfoForChange):
         chat = self.is_chat_exist(chat_info.chat_id)
-        # self.is_chat_creator(chat, chat_info.creator)
+        self.is_chat_creator(chat, chat_info.creator)
         chat_info.populate_obj(chat)
 
 @component
