@@ -14,10 +14,9 @@ class User:
 class Chat:
     chat_id: int
     chat_title: str
-    users_list: list[User]
+    users_list: User
     creator: User
-    chat_messages: list[Message]
-
+    chat_messages: Message
 
 @attr.dataclass
 class Message:

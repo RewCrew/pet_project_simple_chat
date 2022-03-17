@@ -1,0 +1,48 @@
+@startuml
+header  chat_evraz
+title BD scheme
+
+hide circle
+
+
+
+
+entity message {
+    * **message_id**: int
+    message_text: str
+    * **sent_from**: user_id
+    sent_date: datetime.datetime
+    }
+
+entity chat {
+    * **chat_id**: int
+    chat_title: str
+    * **creator**: user_id
+
+}
+
+entity user {
+    * **id**: int PK
+     name: str
+     email: str
+}
+
+entity chat_messages{
+    * **message_id**
+    * **chat_id**
+}
+
+entity chat_users{
+    * **chat_id**
+    * **user_id**
+}
+
+chat_messages ||--|| message
+chat_messages }o--|| chat
+
+chat_users }o--|| user
+chat_users }|--|| chat
+user ||--o{ message
+
+
+@enduml
