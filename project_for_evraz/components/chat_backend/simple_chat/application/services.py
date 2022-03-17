@@ -23,7 +23,7 @@ class UserInfo(DTO):
 class UserService:
     users_repo: interfaces.UsersRepo
     @join_point
-    @validate_arguments
+    @validate_with_dto
     def add_user(self, user_info: UserInfo):
         user = user_info.create_obj(User)
         self.users_repo.add(user)

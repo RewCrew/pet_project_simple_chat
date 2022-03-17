@@ -12,6 +12,7 @@ entity message {
     message_text: str
     * **sent_from**: user_id FK
     sent_date: datetime.datetime
+    * **chat_id**: FK
     }
 
 entity chat {
@@ -39,12 +40,13 @@ entity chat_users{
     * **user_id** FK
 }
 
-chat_messages ||--|| message
-chat_messages }o--|| chat
+'chat_messages ||--|| message
+'chat_messages }o--|| chat
 
 chat_users }o--|| user
 chat_users }|--|| chat
 user ||--o{ message
+user ||-u-|{ chat
 
-
+chat ||--o{ message
 @enduml

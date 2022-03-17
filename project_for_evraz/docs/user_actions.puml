@@ -10,12 +10,12 @@ left to right direction
 rectangle "Autorization"{
     usecase "Login" as login
     usecase "Register" as register
-    usecase "Logoff" as logoff
+    usecase "Logout" as logoff
 }
 
 rectangle "Message"{
 (Send message) as send_message
-(Get messages history) as history
+
 }
 
 
@@ -26,6 +26,7 @@ rectangle "Chat"{
 (Update chat) as uchat
 (Delete chat) as dchat
 (Add user in chat) as auser
+(Get messages history) as history
 }
 
 guest-->login
