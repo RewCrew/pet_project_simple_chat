@@ -29,9 +29,11 @@ class UserService:
         self.users_repo.add(user)
 
 
+@component
 class ChatService:
     chats_repo: interfaces.ChatsRepo
-
+    @join_point
+    @validate_arguments
     def get_all_users_in_chat(self, id:int) -> List[User]:
         chat =  self.chats_repo.get_by_id(id)
         users_list = chat.users_list #????

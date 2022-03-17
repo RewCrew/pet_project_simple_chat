@@ -3,24 +3,30 @@ title Precedents DIAG
 
 :Guest: as guest
 :User: as user
-:BlockedUser: as blocked_user
 :Chat Admin: as admin
 
 left to right direction
 
-(Login) as login
-(Register) as register
-(Logoff) as logoff
+rectangle "Autorization"{
+    usecase "Login" as login
+    usecase "Register" as register
+    usecase "Logoff" as logoff
+}
 
-(Get info about chat) as info
+rectangle "Message"{
 (Send message) as send_message
+(Get messages history) as history
+}
+
+
+rectangle "Chat"{
+(Get info about chat) as info
 (Exit from chat) as exit
-(Get chat history) as history
 (Create chat) as cchat
 (Update chat) as uchat
 (Delete chat) as dchat
-(Block user) as buser
 (Add user in chat) as auser
+}
 
 guest-->login
 guest-->register
@@ -31,14 +37,13 @@ user --> cchat
 user --> info
 user --> send_message
 user --> exit
+user --> history
 
 
 admin --> uchat
 admin --> dchat
-admin --> buser
 admin --> auser
 
-blocked_user-->history
 
 @enduml
 
