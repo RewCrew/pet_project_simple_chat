@@ -19,7 +19,7 @@ class UsersRepo(BaseRepository, interfaces.UsersRepo):
 @component
 class ChatsRepo(BaseRepository, interfaces.ChatsRepo):
     def get_by_id(self, chat_id: int) -> Optional[Chat]:
-        query = select(Chat).where(Chat.id == chat_id)
+        query = select(Chat).where(Chat.chat_id == chat_id)
         return self.session.execute(query).scalars().one_or_none()
 
     def add(self, chat: Chat):

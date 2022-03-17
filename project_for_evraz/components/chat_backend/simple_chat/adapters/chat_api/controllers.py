@@ -1,3 +1,5 @@
+import json
+
 from simple_chat.application import services
 from classic.components import component
 
@@ -14,7 +16,10 @@ class ChatController:
     @join_point
     def on_post_add_chat(self, request:Request, response:Response):
         self.chat_controller.add_chat(**request.media)
+        response.body=json.dumps('Chat created')
+
 
     @join_point
     def on_patch_update_chat(self, request: Request, response: Response):
-        self.chats.update_chat(**request.media)
+        self.chat_controller.update_chat(**request.media)
+        response.body = json.dumps('Chat Updated')
