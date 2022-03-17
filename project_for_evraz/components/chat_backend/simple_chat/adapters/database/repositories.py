@@ -6,27 +6,27 @@ from classic.components import component
 from classic.sql_storage import BaseRepository
 
 from simple_chat.application import interfaces
-from simple_chat.application.dataclasses import Users, Chats, Messages, ChatUsers
+from simple_chat.application.dataclasses import User, Chat, Message, ChatUsers
 
 
 @component
 class UsersRepo(BaseRepository, interfaces.UsersRepo):
-    def add(self, user: Users):
+    def add(self, user: User):
         self.session.add(user)
         self.session.flush()
 
 
 @component
 class ChatsRepo(BaseRepository, interfaces.ChatsRepo):
-    def get_by_id(self, chat_id: int) -> Optional[Chats]:
-        query = select(Chats).where(Chats.id == chat_id)
+    def get_by_id(self, chat_id: int) -> Optional[Chat]:
+        query = select(Chat).where(Chat.id == chat_id)
         return self.session.execute(query).scalars().one_or_none()
 
-    def add(self, chat: Chats):
+    def add(self, chat: Chat):
         self.session.add(chat)
         self.session.flush()
 
-    def delete(self, chat: Chats):
+    def delete(self, chat: Chat):
         self.session.delete(chat)
         self.session.flush()
 
@@ -34,7 +34,7 @@ class ChatsRepo(BaseRepository, interfaces.ChatsRepo):
 @component
 class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
 
-    def get_by_id_chat(self, chat_id: int) -> Optional[List[Users]]:
+    def get_by_id_chat(self, chat_id: int) -> Optional[List[User]]:
         users = self.session.query(User.name).filter_by(chat_id=chat_id).join(
             ChatUsers, User.id == ChatUsers.user_id)
         return users.all()
@@ -42,7 +42,7 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
     def get_by_id_user(self, user_id: int) -> Optional[List[Chat]]:
         chats = self.session.query(Chat.chat_title).filter_by(user_id=user_id).join(
             ChatUsers, Chat.chat_id == ChatUsers.chat_id)
-        return users.all()
+        return chats.all()
 
     def add(self, chat_users: ChatUsers):
         self.session.add(chat_users)
@@ -52,6 +52,6 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
 @component
 class MessagesRepo(BaseRepository, interfaces.MessagesRepo):
 
-    def add(self, message: Messages):
+    def add(self, message: Message):
         self.session.add(message)
         self.session.flush()

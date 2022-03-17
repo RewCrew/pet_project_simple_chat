@@ -28,8 +28,8 @@ class Application:
     )
     chat_controller = services.ChatService(
         chats_repo=DB.chats_repo,
-        chat_users_repo = DB.chat_users_repo,
-        messages_repo = DB.messages_repo
+        # chat_users_repo = DB.chat_users_repo,
+        # messages_repo = DB.messages_repo
     )
 
 class Aspects:
@@ -37,12 +37,13 @@ class Aspects:
     chat_api.join_points.join(DB.context)
 
 
-app = shop_api.create_app(
-    chats=Application.chat_controller)
+app = chat_api.create_app(
+    chats=Application.chat_controller
+    ,)
 
 
 if __name__ == "__main__":
     from wsgiref import simple_server
 
-    with simple_server.make_server('127.0.0.1', 8123, app) as server:
+    with simple_server.make_server('', 8000, app=app) as server:
         server.serve_forever()

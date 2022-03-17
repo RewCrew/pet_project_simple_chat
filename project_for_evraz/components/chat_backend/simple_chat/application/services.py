@@ -13,30 +13,27 @@ from .dataclasses import Chat, Message, User
 join_points = PointCut()
 join_point = join_points.join_point
 
-
+#
 class UserInfo(DTO):
     name: str
     email: str
-
+#
 class MessageInfo(DTO):
-    message_id: Optional[int]
+
     message_text: str
-    sent_from: User
+    sent_from: str
     sent_date: str
-    chat_id: Chat
-
+    chat_id: int
+    message_id: Optional[int]
+#
 class ChatInfo(DTO):
-    chat_title: str
-    users_list: list[User]
-    creator: User
-    chat_messages: list[Message]
-
+    chat_title: Optional[str]
+    creator: int
+#
 class ChatInfoForChange(DTO):
     chat_id: Optional[int]
+    creator: str
     chat_title: str = None
-    users_list: list[User]
-    creator: User
-    chat_messages: list[Message]
 
 class ChatUsersInfo(DTO):
     chat_id: int
@@ -45,34 +42,33 @@ class ChatUsersInfo(DTO):
 class ChatUsersInfoForChange(DTO):
     chat_id: int
     user_id: int
-
+#
 
 @component
 class UserService:
     users_repo: interfaces.UsersRepo
 
     @join_point
-    @validate_with_dto
+    # @validate_with_dto
     def add_user(self, user_info: UserInfo):
         user = user_info.create_obj(User)
         self.users_repo.add(user)
-
-
+#
+#
 @component
 class ChatService:
     chats_repo: interfaces.ChatsRepo
-    chats_users_repo: interfaces.ChatUsersRepo
-    messages_repo: interfaces.MessagesRepo
+    # chats_users_repo: interfaces.ChatUsersRepo
+    # messages_repo: interfaces.MessagesRepo
 
     @join_point
-    @validate_arguments
     def get_all_users_in_chat(self, id: int) -> List[User]:
         chat = self.chats_repo.get_by_id(id)
         users_list = chat.users_list  # ????
         return users_list
-
+#
     @join_point
-    @validate_with_dto
+    # @validate_with_dto
     def add_chat(self, chat_info: ChatInfo):
         new_chat = chat_info.create_obj(Chat)
         self.chats_repo.add(new_chat)

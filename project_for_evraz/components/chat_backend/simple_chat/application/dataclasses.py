@@ -3,32 +3,32 @@ from typing import List, Optional
 
 import attr
 
+
 @attr.dataclass
 class User:
-    id: Optional[int]=None
     name: str
     email: str
+    id: Optional[int] = None
 
 
 @attr.dataclass
 class Chat:
-    chat_id: Optional[int]=None
     chat_title: str
-    users_list: list[User]
     creator: User
-    chat_messages: list[Message]
+    chat_messages: List['Message'] = attr.ib(factory=list)
+    chat_id: Optional[int] = None
+    users_list: List[User] = attr.ib(factory=list)
 
 @attr.dataclass
 class Message:
-    message_id: Optional[int]=None
     message_text: str
     sent_from: User
-    sent_date: datetime.datetime
     chat_id: Chat
-
+    sent_date: datetime.datetime = datetime.datetime.now()
+    message_id: Optional[int] = None
 
 @attr.dataclass
 class ChatUsers:
-    id: Optional[int] = None
     chat_id: Chat
     user_id: User
+    id: Optional[int] = None

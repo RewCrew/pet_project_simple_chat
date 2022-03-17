@@ -5,11 +5,11 @@ from . import controllers
 
 
 def create_app(
-        profiles: services.Profiles,
+        chats: services.ChatService,
 
 ) -> App:
     app = App(prefix='/api')
 
-    app.register(controllers.Profiles(profiles=profiles))
+    app.register(controllers.ChatController(chat_controller=chats))
 
     return app
