@@ -23,6 +23,7 @@ class DB:
 
 
 class Application:
+    register = services.RegisterService(user_repo=DB.users_repo)
     user_controller = services.UserService(
         users_repo=DB.users_repo,
     )
@@ -39,7 +40,7 @@ class Aspects:
 
 app = chat_api.create_app(
     chats=Application.chat_controller
-    ,)
+    ,register=Application.register,)
 
 
 if __name__ == "__main__":

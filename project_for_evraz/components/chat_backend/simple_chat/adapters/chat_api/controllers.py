@@ -23,3 +23,12 @@ class ChatController:
     def on_patch_update_chat(self, request: Request, response: Response):
         self.chat_controller.update_chat(**request.media)
         response.body = json.dumps('Chat Updated')
+
+@component
+class Register:
+    register: services.RegisterService
+
+    @join_point
+    def on_post_register(self, request: Request, response: Response):
+        self.register.add_user(**request.media)
+        response.body = json.dumps('registration completed')

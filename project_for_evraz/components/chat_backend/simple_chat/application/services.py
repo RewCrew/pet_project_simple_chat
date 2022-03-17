@@ -91,3 +91,12 @@ class ChatService:
         # self.is_chat_creator(chat, chat_info.creator)
         chat_info.populate_obj(chat)
 
+@component
+class RegisterService:
+    user_repo: interfaces.UsersRepo
+
+    @join_point
+    @validate_with_dto
+    def add_user(self, user_info: UserInfo):
+        new_user = user_info.create_obj(User)
+        self.user_repo.add(new_user)
