@@ -8,6 +8,14 @@ class UsersRepo(ABC):
     def add(self, user:User):
         pass
 
+    @abstractmethod
+    def get_or_create(self, user:User):
+        pass
+
+    @abstractmethod
+    def get_by_id(self, id_:int):
+        pass
+
 
 class ChatsRepo(ABC):
     @abstractmethod

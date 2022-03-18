@@ -29,7 +29,7 @@ class MessageInfo(DTO):
 class ChatInfo(DTO):
     creator: int
     chat_title: Optional[str]
-#
+
 class ChatInfoForChange(DTO):
     creator: int
     chat_title: str = None
@@ -99,4 +99,6 @@ class RegisterService:
     @validate_with_dto
     def add_user(self, user_info: UserInfo):
         new_user = user_info.create_obj(User)
-        self.user_repo.add(new_user)
+        user = self.user_repo.get_or_create(new_user)
+        return user
+

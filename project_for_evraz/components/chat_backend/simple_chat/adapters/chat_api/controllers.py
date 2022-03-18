@@ -6,6 +6,11 @@ from classic.components import component
 from .join_points import join_point
 from falcon import Request, Response
 
+from classic.http_auth import (
+    authenticate,
+    authenticator_needed,
+    authorize,
+)
 
 
 
@@ -30,5 +35,9 @@ class Register:
 
     @join_point
     def on_post_register(self, request: Request, response: Response):
-        self.register.add_user(**request.media)
-        response.body = json.dumps('registration completed')
+        user = self.register.add_user(**request.media)
+        response.media = {
+            'user_id': user.id,
+            'user_name': user.name,
+            'email': user.email,
+        }

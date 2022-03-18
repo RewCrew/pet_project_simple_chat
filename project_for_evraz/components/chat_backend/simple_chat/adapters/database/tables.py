@@ -39,7 +39,7 @@ messages = Table(
     Column('chat_id', Integer, ForeignKey('chats.chat_id'), nullable=False )
 )
 
-chat_users =Table(
+chat_users = Table(
     'chat_users',
     metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),

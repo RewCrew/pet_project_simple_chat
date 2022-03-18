@@ -48,3 +48,9 @@ if __name__ == "__main__":
 
     with simple_server.make_server('', 8000, app=app) as server:
         server.serve_forever()
+
+        # hupper - m
+        # waitress - -port = 8000 - -host = 127.0
+        # .0
+        # .1
+        # simple_chat.composites.chat_api: app
