@@ -73,6 +73,12 @@ class ChatService:
         if chat.creator != user_id:
             raise Exception('Not enough rights (Creator)')
 
+    def is_chat_member(self, chat_id: int, user_id: int) -> Optional[ChatUsers]:
+        member = self.chat_users_repo.check_user(chat_id, user_id)
+        if member is None:
+            raise Exception('Not enough rights (Member)')
+        return member
+
     @join_point
     def get_all_users_in_chat(self, id: int) -> List[User]:
         chat = self.chats_repo.get_by_id(id)
@@ -102,12 +108,18 @@ class ChatService:
         self.is_chat_creator(chat, chat_info.creator)
         chat_info.populate_obj(chat)
 
-    # @join_point
-    # def add_participant(self, chat_id:int, user_id:int, new_user:User):
-    #     chat = self.chats_repo.
-    #     if not chat.creator(user_id):
-    #         return
-    #     chat.add_participant(new_user)
+    @join_point
+    def add_participant(self, chat_id:int, creator_id:int, user_id:int):
+        chat = self.is_chat_exist(chat_id)
+        self.is_chat_creator(chat, int(creator_id))
+        chat_users = ChatUsers(chat.chat_id, user_id)
+        self.chat_users_repo.add(chat_users)
+
+    @join_point
+    def get_chat_info(self, chat_id: int, user_id: int) -> Chat:
+        self.is_chat_member(chat_id, user_id)
+        chat = self.is_chat_exist(chat_id)
+        return chat
 
 @component
 class RegisterService:

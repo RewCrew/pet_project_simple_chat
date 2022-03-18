@@ -70,6 +70,10 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
         self.session.execute(query)
         self.session.flush()
 
+    def check_user(self, chat_id: int, user_id: int) -> Optional[ChatUsers]:
+        query = select(ChatUsers).where(ChatUsers.chat_id == chat_id, ChatUsers.user_id == user_id)
+        return self.session.execute(query).scalars().one_or_none()
+
 
 @component
 class MessagesRepo(BaseRepository, interfaces.MessagesRepo):

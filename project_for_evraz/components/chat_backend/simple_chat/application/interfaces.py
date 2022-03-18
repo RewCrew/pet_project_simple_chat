@@ -47,5 +47,10 @@ class ChatUsersRepo(ABC):
     def add(self, chat_users:ChatUsers):
         pass
 
+    @abstractmethod
     def delete(self, chat_id:int):
+        pass
+
+    @abstractmethod
+    def check_user(self, chat_id: int, user_id: int) -> Optional[ChatUsers]:
         pass
