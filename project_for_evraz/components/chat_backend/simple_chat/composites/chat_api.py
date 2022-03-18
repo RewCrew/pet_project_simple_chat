@@ -29,7 +29,8 @@ class Application:
     )
     chat_controller = services.ChatService(
         chats_repo=DB.chats_repo,
-        # chat_users_repo = DB.chat_users_repo,
+        chat_users_repo = DB.chat_users_repo,
+        users_repo = DB.users_repo
         # messages_repo = DB.messages_repo
     )
 

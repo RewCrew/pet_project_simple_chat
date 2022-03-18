@@ -17,7 +17,7 @@ class Chat:
     creator: User
     chat_messages: List['Message'] = attr.ib(factory=list)
     chat_id: Optional[int] = None
-    users_list: List[User] = attr.ib(factory=list)
+    # users_list: List[User] = attr.ib(factory=list)
 
 @attr.dataclass
 class Message:
@@ -29,6 +29,6 @@ class Message:
 
 @attr.dataclass
 class ChatUsers:
-    chat_id: Chat
-    user_id: User
+    chat_id: int
+    user_id: int
     id: Optional[int] = None

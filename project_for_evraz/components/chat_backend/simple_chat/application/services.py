@@ -8,7 +8,7 @@ from classic.components import component
 from classic.messaging import Message, Publisher
 
 from . import interfaces
-from .dataclasses import Chat, Message, User
+from .dataclasses import Chat, Message, User, ChatUsers
 
 join_points = PointCut()
 join_point = join_points.join_point
@@ -58,8 +58,9 @@ class UserService:
 @component
 class ChatService:
     chats_repo: interfaces.ChatsRepo
-    # chats_users_repo: interfaces.ChatUsersRepo
+    chat_users_repo: interfaces.ChatUsersRepo
     # messages_repo: interfaces.MessagesRepo
+    users_repo: interfaces.UsersRepo
 
     def is_chat_exist(self, chat_id:int)-> Optional[Chat]:
         chat = self.chats_repo.get_by_id(chat_id)
@@ -70,7 +71,7 @@ class ChatService:
     @staticmethod
     def is_chat_creator(chat: Chat, user_id: int):
         if chat.creator != user_id:
-            raise Exception('Not enough rights (Owner)')
+            raise Exception('Not enough rights (Creator)')
 
     @join_point
     def get_all_users_in_chat(self, id: int) -> List[User]:
@@ -82,7 +83,17 @@ class ChatService:
     @validate_with_dto
     def add_chat(self, chat_info: ChatInfo):
         new_chat = chat_info.create_obj(Chat)
-        self.chats_repo.add(new_chat)
+        chat = self.chats_repo.add(new_chat)
+        chat_users=ChatUsers(chat.chat_id, chat.creator)
+        self.chat_users_repo.add(chat_users)
+
+    @join_point
+    @validate_arguments
+    def delete_chat(self, chat_id:int, user_id:int):
+        chat_to_delete=self.is_chat_exist(chat_id)
+        self.is_chat_creator(chat_to_delete, user_id)
+        self.chat_users_repo.delete(chat_id)
+        self.chats_repo.delete(chat_to_delete)
 
     @join_point
     @validate_with_dto
@@ -90,6 +101,13 @@ class ChatService:
         chat = self.is_chat_exist(chat_info.chat_id)
         self.is_chat_creator(chat, chat_info.creator)
         chat_info.populate_obj(chat)
+
+    # @join_point
+    # def add_participant(self, chat_id:int, user_id:int, new_user:User):
+    #     chat = self.chats_repo.
+    #     if not chat.creator(user_id):
+    #         return
+    #     chat.add_participant(new_user)
 
 @component
 class RegisterService:

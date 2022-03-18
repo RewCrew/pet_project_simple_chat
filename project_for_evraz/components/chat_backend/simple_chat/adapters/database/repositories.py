@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlalchemy import select, desc
+from sqlalchemy import select, desc, delete
 
 from classic.components import component
 from classic.sql_storage import BaseRepository
@@ -40,6 +40,8 @@ class ChatsRepo(BaseRepository, interfaces.ChatsRepo):
     def add(self, chat: Chat):
         self.session.add(chat)
         self.session.flush()
+        return chat
+
 
     def delete(self, chat: Chat):
         self.session.delete(chat)
@@ -59,8 +61,13 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
             ChatUsers, Chat.chat_id == ChatUsers.chat_id)
         return chats.all()
 
-    def add(self, chat_users: ChatUsers):
+    def add(self, chat_users:ChatUsers):
         self.session.add(chat_users)
+        self.session.flush()
+
+    def delete(self, chat_id:int):
+        query = delete(ChatUsers).where(ChatUsers.chat_id == chat_id)
+        self.session.execute(query)
         self.session.flush()
 
 

@@ -46,3 +46,6 @@ class ChatUsersRepo(ABC):
     @abstractmethod
     def add(self, chat_users:ChatUsers):
         pass
+
+    def delete(self, chat_id:int):
+        pass

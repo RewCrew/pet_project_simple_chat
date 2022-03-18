@@ -13,21 +13,31 @@ from classic.http_auth import (
 )
 
 
-
 @component
 class ChatController:
     chat_controller: services.ChatService
 
     @join_point
-    def on_post_add_chat(self, request:Request, response:Response):
+    def on_post_add_chat(self, request: Request, response: Response):
         self.chat_controller.add_chat(**request.media)
-        response.body=json.dumps('Chat created')
+        response.body = json.dumps('Chat created')
+
+    @join_point
+    def on_post_update_chat(self, request: Request, response: Response):
+        self.chat_controller.update_chat(**request.media)
+        response.body = json.dumps('Chat Updated')
+
+    @join_point
+    def on_post_delete_chat(self, request: Request, response: Response):
+        self.chat_controller.delete_chat(**request.media)
+        response.body = json.dumps('Chat deleted')
 
 
     @join_point
-    def on_patch_update_chat(self, request: Request, response: Response):
-        self.chat_controller.update_chat(**request.media)
-        response.body = json.dumps('Chat Updated')
+    def on_post_add_participant(self, request:Request, response:Response):
+        self.chat_controller.add_participant(**request.media)
+
+
 
 @component
 class Register:
