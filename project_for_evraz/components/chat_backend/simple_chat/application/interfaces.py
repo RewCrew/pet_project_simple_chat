@@ -33,6 +33,10 @@ class MessagesRepo(ABC):
     def add(self, message:Message):
         pass
 
+    @abstractmethod
+    def get_messages(self, chat_id:int):
+        pass
+
 
 class ChatUsersRepo(ABC):
     @abstractmethod
@@ -54,3 +58,5 @@ class ChatUsersRepo(ABC):
     @abstractmethod
     def check_user(self, chat_id: int, user_id: int) -> Optional[ChatUsers]:
         pass
+
+

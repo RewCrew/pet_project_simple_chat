@@ -22,9 +22,10 @@ class Chat:
 @attr.dataclass
 class Message:
     message_text: str
-    sent_from: User
-    chat_id: Chat
-    sent_date: datetime.datetime = datetime.datetime.now()
+    sent_from: int
+    chat_id: int
+    sent_date: datetime.datetime = attr.ib(
+    factory=lambda: datetime.datetime.now())
     message_id: Optional[int] = None
 
 @attr.dataclass

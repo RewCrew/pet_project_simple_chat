@@ -21,8 +21,8 @@ class UserInfo(DTO):
 class MessageInfo(DTO):
 
     message_text: str
-    sent_from: str
-    sent_date: str
+    sent_from: int
+    sent_date: Optional[str]
     chat_id: int
     message_id: Optional[int]
 #
@@ -59,7 +59,7 @@ class UserService:
 class ChatService:
     chats_repo: interfaces.ChatsRepo
     chat_users_repo: interfaces.ChatUsersRepo
-    # messages_repo: interfaces.MessagesRepo
+    messages_repo: interfaces.MessagesRepo
     users_repo: interfaces.UsersRepo
 
     def is_chat_exist(self, chat_id:int)-> Optional[Chat]:
@@ -120,6 +120,24 @@ class ChatService:
         self.is_chat_member(chat_id, user_id)
         chat = self.is_chat_exist(chat_id)
         return chat
+
+    @join_point
+    @validate_with_dto
+    def send_message(self, message:MessageInfo):
+        self.is_chat_exist(message.chat_id)
+        self.is_chat_member(message.chat_id, message.sent_from)
+        message= message.create_obj(Message)
+        message = self.messages_repo.add(message)
+        return message
+
+    @join_point
+    @validate_arguments
+    def get_messages(self, chat_id:int, user_id:int)-> List[Message]:
+        self.is_chat_exist(chat_id)
+        self.is_chat_member(chat_id, user_id)
+        messages_list=self.messages_repo.get_messages(chat_id)
+        return messages_list
+
 
 @component
 class RegisterService:
