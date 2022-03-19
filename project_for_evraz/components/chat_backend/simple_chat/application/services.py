@@ -53,8 +53,8 @@ class UserService:
     def add_user(self, user_info: UserInfo):
         user = user_info.create_obj(User)
         self.users_repo.add(user)
-#
-#
+
+
 @component
 class ChatService:
     chats_repo: interfaces.ChatsRepo
