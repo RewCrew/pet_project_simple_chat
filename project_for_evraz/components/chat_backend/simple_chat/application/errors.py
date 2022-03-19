@@ -15,7 +15,3 @@ class NotCreator(AppError):
     msg_template = "user with id '{user_id}' not a creator of chat"
     code = 'chat.not_creator'
 
-#
-# class EmptyCart(AppError):
-#     msg_template = "Cart is empty"
-#     code = 'shop.cart_is_empty'

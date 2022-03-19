@@ -20,21 +20,22 @@ class ChatController:
     @join_point
     def on_post_add_chat(self, request: Request, response: Response):
         self.chat_controller.add_chat(**request.media)
-        response.body = json.dumps('Chat created')
+        response.media = {'message': 'chat added'}
 
     @join_point
     def on_post_update_chat(self, request: Request, response: Response):
         self.chat_controller.update_chat(**request.media)
-        response.body = json.dumps('Chat Updated')
+        response.media = {'message': 'chat updated'}
 
     @join_point
     def on_post_delete_chat(self, request: Request, response: Response):
         self.chat_controller.delete_chat(**request.media)
-        response.body = json.dumps('Chat deleted')
+        response.media = {'message': 'chat deleted'}
 
     @join_point
     def on_post_add_participant(self, request: Request, response: Response):
         self.chat_controller.add_participant(**request.media)
+        response.media = {'message': 'participant added in chat'}
 
     @join_point
     def on_get_show_chat_info(self, request: Request, response: Response):
@@ -42,7 +43,6 @@ class ChatController:
         response.media = {
             'title': chat_info.chat_title,
             'creator': chat_info.creator,
-            # 'chat_messages': chat_info.chat_messages
         }
 
     @join_point
@@ -79,9 +79,10 @@ class ChatController:
         }
 
     @join_point
-    def on_post_leave_chat(self,request: Request, response: Response):
+    def on_post_leave_chat(self, request: Request, response: Response):
         quited_user = self.chat_controller.leave_chat(**request.media)
         response.media = quited_user
+
 
 @component
 class Register:
