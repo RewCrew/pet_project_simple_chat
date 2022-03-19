@@ -15,17 +15,15 @@ class User:
 class Chat:
     chat_title: str
     creator: int
-    # chat_messages: List['Message'] = attr.ib(factory=list)
     chat_id: Optional[int] = None
-    # users_list: List[User] = attr.ib(factory=list)
 
 @attr.dataclass
 class Message:
     message_text: str
     sent_from: int
     chat_id: int
-    sent_date: datetime.datetime = attr.ib(
-    factory=lambda: datetime.datetime.now())
+    sent_date: Optional[datetime.datetime] = attr.ib(
+    factory=lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     message_id: Optional[int] = None
 
 @attr.dataclass

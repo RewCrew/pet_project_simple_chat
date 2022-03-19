@@ -17,6 +17,7 @@ join_point = join_points.join_point
 class UserInfo(DTO):
     name: str
     email: str
+    # id: Optional[int]
 #
 class MessageInfo(DTO):
 
@@ -49,8 +50,9 @@ class UserService:
     users_repo: interfaces.UsersRepo
 
     @join_point
-    # @validate_with_dto
+    @validate_with_dto
     def add_user(self, user_info: UserInfo):
+        print(user_info)
         user = user_info.create_obj(User)
         self.users_repo.add(user)
 
@@ -111,6 +113,7 @@ class ChatService:
         if creator is None:
             raise errors.NotCreator(user_id=chat_info.creator)
         chat_info.populate_obj(chat)
+        return chat
 
     @join_point
     def add_participant(self, chat_id:int, creator_id:int, user_id:int):

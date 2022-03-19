@@ -8,7 +8,8 @@ from sqlalchemy import (
     MetaData,
     String,
     Table,
-    DateTime
+    DateTime,
+    UniqueConstraint
 )
 
 naming_convention = {
@@ -56,7 +57,7 @@ chat_users = Table(
     metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
     Column('chat_id', Integer, ForeignKey('chats.chat_id', ondelete='CASCADE'), nullable=False),
-    Column('user_id', Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    Column('user_id', Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False),
 
 )
 
