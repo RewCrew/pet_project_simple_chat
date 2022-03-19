@@ -7,7 +7,7 @@ from classic.aspects import PointCut
 from classic.components import component
 from classic.messaging import Message, Publisher
 
-from . import interfaces
+from . import interfaces, errors
 from .dataclasses import Chat, Message, User, ChatUsers
 
 join_points = PointCut()
@@ -65,25 +65,21 @@ class ChatService:
     def is_chat_exist(self, chat_id:int)-> Optional[Chat]:
         chat = self.chats_repo.get_by_id(chat_id)
         if chat is None:
-            raise Exception('not found')
+            raise errors.NoChat(chat_id=chat_id)
         return chat
 
     @staticmethod
     def is_chat_creator(chat: Chat, user_id: int):
         if chat.creator != user_id:
-            raise Exception('Not enough rights (Creator)')
+            raise errors.NotCreator(user_id=user_id)
+        return chat
 
     def is_chat_member(self, chat_id: int, user_id: int) -> Optional[ChatUsers]:
         member = self.chat_users_repo.check_user(chat_id, user_id)
         if member is None:
-            raise Exception('Not enough rights (Member)')
+            raise errors.NotMember(user_id=user_id)
         return member
 
-    @join_point
-    def get_all_users_in_chat(self, id: int) -> List[User]:
-        chat = self.chats_repo.get_by_id(id)
-        users_list = chat.users_list  # ????
-        return users_list
 #
     @join_point
     @validate_with_dto
@@ -92,12 +88,16 @@ class ChatService:
         chat = self.chats_repo.add(new_chat)
         chat_users=ChatUsers(chat.chat_id, chat.creator)
         self.chat_users_repo.add(chat_users)
-
+    #
     @join_point
     @validate_arguments
     def delete_chat(self, chat_id:int, user_id:int):
         chat_to_delete=self.is_chat_exist(chat_id)
-        self.is_chat_creator(chat_to_delete, user_id)
+        if chat_to_delete is None:
+            raise errors.NoChat(chat_id=chat_id)
+        creator = self.is_chat_creator(chat_to_delete, user_id)
+        if creator is None:
+            raise errors.NotCreator(user_id=user_id)
         self.chat_users_repo.delete(chat_id)
         self.chats_repo.delete(chat_to_delete)
 
@@ -105,27 +105,51 @@ class ChatService:
     @validate_with_dto
     def update_chat(self, chat_info: ChatInfoForChange):
         chat = self.is_chat_exist(chat_info.chat_id)
-        self.is_chat_creator(chat, chat_info.creator)
+        if chat is None:
+            raise errors.NoChat(chat_id=chat_info.chat_id)
+        creator = self.is_chat_creator(chat, chat_info.creator)
+        if creator is None:
+            raise errors.NotCreator(user_id=chat_info.creator)
         chat_info.populate_obj(chat)
 
     @join_point
     def add_participant(self, chat_id:int, creator_id:int, user_id:int):
         chat = self.is_chat_exist(chat_id)
-        self.is_chat_creator(chat, int(creator_id))
+        if chat is None:
+            raise errors.NoChat(chat_id=chat_id)
+        creator=self.is_chat_creator(chat, int(creator_id))
+        if creator is None:
+            raise errors.NotCreator(user_id=creator_id)
         chat_users = ChatUsers(chat.chat_id, user_id)
         self.chat_users_repo.add(chat_users)
 
     @join_point
     def get_chat_info(self, chat_id: int, user_id: int) -> Chat:
-        self.is_chat_member(chat_id, user_id)
         chat = self.is_chat_exist(chat_id)
+        if chat is None:
+            raise errors.NoChat(chat_id=chat_id)
+        member = self.is_chat_member(chat_id, user_id)
+        if member is None:
+            raise errors.NotMember(user_id=user_id)
         return chat
+
+    @join_point
+    def get_users_in_chat(self, chat_id:int, user_id:int):
+        member = self.is_chat_member(chat_id, user_id)
+        if member is None:
+            raise errors.NotMember
+        users_list = self.chat_users_repo.get_by_id_chat(chat_id)
+        return users_list
 
     @join_point
     @validate_with_dto
     def send_message(self, message:MessageInfo):
-        self.is_chat_exist(message.chat_id)
-        self.is_chat_member(message.chat_id, message.sent_from)
+        chat = self.is_chat_exist(message.chat_id)
+        if chat is None:
+            raise errors.NoChat(chat_id=message.chat_id)
+        member = self.is_chat_member(message.chat_id, message.sent_from)
+        if member is None:
+            raise errors.NotMember(user_id=message.sent_from)
         message= message.create_obj(Message)
         message = self.messages_repo.add(message)
         return message
@@ -133,10 +157,27 @@ class ChatService:
     @join_point
     @validate_arguments
     def get_messages(self, chat_id:int, user_id:int)-> List[Message]:
-        self.is_chat_exist(chat_id)
-        self.is_chat_member(chat_id, user_id)
+        chat = self.is_chat_exist(chat_id)
+        if chat is None:
+            raise errors.NoChat(chat_id=chat_id)
+        member = self.is_chat_member(chat_id, user_id)
+        if member is None:
+            raise errors.NotMember(user_id=user_id)
         messages_list=self.messages_repo.get_messages(chat_id)
         return messages_list
+
+    @join_point
+    def leave_chat(self, chat_id:int, user_id:int):
+        chat = self.is_chat_exist(chat_id)
+        if chat is None:
+            raise errors.NoChat(chat_id=chat_id)
+        if chat.creator == int(user_id):
+            self.chat_users_repo.delete(chat_id)
+            self.chats_repo.delete(chat)
+            return f'user {user_id} leave chat and chat deleted'
+        else:
+            self.chat_users_repo.leave_chat(chat_id, user_id)
+            return f'user {user_id} leave chat {chat_id}'
 
 
 @component

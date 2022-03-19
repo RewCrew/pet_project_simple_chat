@@ -59,4 +59,8 @@ class ChatUsersRepo(ABC):
     def check_user(self, chat_id: int, user_id: int) -> Optional[ChatUsers]:
         pass
 
+    @abstractmethod
+    def leave_chat(self, chat_id:int, user_id:int):
+        pass
+
 

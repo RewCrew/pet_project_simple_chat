@@ -51,10 +51,11 @@ class ChatsRepo(BaseRepository, interfaces.ChatsRepo):
 @component
 class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
 
-    def get_by_id_chat(self, chat_id: int) -> Optional[List[User]]:
-        users = self.session.query(User.name).filter_by(chat_id=chat_id).join(
-            ChatUsers, User.id == ChatUsers.user_id)
-        return users.all()
+    def get_by_id_chat(self, chat_id: int):
+        query = self.session.query(User, ChatUsers)
+        query = query.join(User, User.id == ChatUsers.user_id)
+        query = query.filter(ChatUsers.chat_id == chat_id)
+        return self.session.execute(query).scalars().all()
 
     def get_by_id_user(self, user_id: int) -> Optional[List[Chat]]:
         chats = self.session.query(Chat.chat_title).filter_by(user_id=user_id).join(
@@ -73,6 +74,11 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
     def check_user(self, chat_id: int, user_id: int) -> Optional[ChatUsers]:
         query = select(ChatUsers).where(ChatUsers.chat_id == chat_id, ChatUsers.user_id == user_id)
         return self.session.execute(query).scalars().one_or_none()
+
+    def leave_chat(self, chat_id:int, user_id:int):
+        query = delete(ChatUsers).where(ChatUsers.chat_id == chat_id, ChatUsers.user_id==user_id)
+        self.session.execute(query)
+        self.session.flush()
 
 
 @component

@@ -70,6 +70,18 @@ class ChatController:
 
         }
 
+    @join_point
+    def on_get_show_chat_users(self, request: Request, response: Response):
+        users_list = self.chat_controller.get_users_in_chat(**request.media)
+        response.media = {
+            'users in chat': [{'user_id': user.id, 'user_name': user.name, 'user_email': user.email} for user in
+                              users_list]
+        }
+
+    @join_point
+    def on_post_leave_chat(self,request: Request, response: Response):
+        quited_user = self.chat_controller.leave_chat(**request.media)
+        response.media = quited_user
 
 @component
 class Register:
