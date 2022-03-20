@@ -48,7 +48,7 @@ messages = Table(
     Column('message_id', Integer, primary_key=True, autoincrement=True),
     Column('message_text', String, nullable=False),
     Column('sent_from', Integer, ForeignKey('users.id')),
-    Column('sent_date', DateTime, nullable=False),
+    Column('sent_date', String, nullable=False),
     Column('chat_id', Integer, ForeignKey('chats.chat_id'), nullable=False )
 )
 

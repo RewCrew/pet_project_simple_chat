@@ -71,7 +71,6 @@ test_data_get_users = {
 
 
 def test_add_user(user_test):
-    print(user_test)
     user_test.add_user(**test_data_user)
     user_test.users_repo.add.assert_called_once()
 
