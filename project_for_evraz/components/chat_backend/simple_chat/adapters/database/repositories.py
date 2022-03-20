@@ -14,6 +14,8 @@ class UsersRepo(BaseRepository, interfaces.UsersRepo):
     def add(self, user: User):
         self.session.add(user)
         self.session.flush()
+        self.session.refresh(user)
+        return user
         
     def get_by_id(self, id_: int) -> Optional[User]:
         query = select(User).where(User.id == id_)
@@ -27,7 +29,7 @@ class UsersRepo(BaseRepository, interfaces.UsersRepo):
             if new_user is None:
                 self.add(user)
             else:
-                user=new_user
+                user = new_user
         return user
 
 

@@ -8,7 +8,7 @@ from simple_chat.application import services
 
 class Settings:
     db = database.Settings()
-
+    chat_api=chat_api.Settings()
 
 class DB:
     engine = create_engine(Settings.db.DB_URL)
@@ -33,6 +33,7 @@ class Application:
         users_repo = DB.users_repo,
         messages_repo = DB.messages_repo
     )
+    is_dev_mode = Settings.chat_api.IS_DEV_MODE
 
 class Aspects:
     services.join_points.join(DB.context)
@@ -41,7 +42,9 @@ class Aspects:
 
 app = chat_api.create_app(
     chats=Application.chat_controller
-    ,register=Application.register,)
+    ,register=Application.register,
+    is_dev_mode=Application.is_dev_mode
+)
 
 
 if __name__ == "__main__":
