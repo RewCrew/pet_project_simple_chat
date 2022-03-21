@@ -31,3 +31,8 @@ class ChatUsers:
     chat_id: int
     user_id: int
     id: Optional[int] = None
+
+@attr.dataclass
+class ChatUsersShort:
+    chat_id: int
+    user_id: int

@@ -8,7 +8,7 @@ from classic.aspects import PointCut
 from classic.components import component
 
 from . import interfaces, errors
-from .dataclasses import Chat, Message, User, ChatUsers
+from .dataclasses import Chat, Message, User, ChatUsers, ChatUsersShort
 
 join_points = PointCut()
 join_point = join_points.join_point
@@ -99,6 +99,8 @@ class ChatService:
         chat = self.chats_repo.add(new_chat)
         chat_users = ChatUsers(chat.chat_id, chat.creator)
         self.chat_users_repo.add(chat_users)
+        return chat
+
 
     #
     @join_point
@@ -126,7 +128,7 @@ class ChatService:
         return chat
 
     @join_point
-    def add_participant(self, chat_id: int, creator_id: int, user_id: int):
+    def add_participant(self, chat_id: int, creator_id: int, user_id: int)-> ChatUsersShort:
         chat = self.is_chat_exist(chat_id)
         if chat is None:
             raise errors.NoChat(chat_id=chat_id)
@@ -135,6 +137,8 @@ class ChatService:
             raise errors.NotCreator(user_id=creator_id)
         chat_users = ChatUsers(chat.chat_id, user_id)
         self.chat_users_repo.add(chat_users)
+        chat_users = ChatUsersShort(chat.chat_id, user_id)
+        return chat_users
 
     @join_point
     def get_chat_info(self, chat_id: int, user_id: int) -> Chat:

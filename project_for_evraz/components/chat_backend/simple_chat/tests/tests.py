@@ -40,13 +40,15 @@ test_data_chat = {
 
 test_data_chat_user = {
     'chat_id': 1,
-    'user_id': 1
+    'user_id': 2
 }
 
 test_data_message = {
     'chat_id': 1,
     'sent_from': 1,
-    'message_text': 'TestMessage'
+    'message_text': 'TestMessage',
+    'sent_date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    'message_id':1
 }
 
 test_chat_update = {
@@ -66,7 +68,7 @@ test_data_get_messages = {
 test_data_get_users = {
     'user_id': 1,
     'chat_id': 1,
-    'id': 1
+
 }
 
 
@@ -81,16 +83,17 @@ def test_get_user(user_test):
 
 
 def test_add_chat(chat_test):
-    chat_test.add_chat(**test_data_chat)
+    chat = chat_test.add_chat(**test_data_chat)
     chat_test.chats_repo.add.assert_called_once()
-
+    assert asdict(chat) == test_data_chat
 
 def test_add_member(chat_test):
-    chat_test.add_participant(
+    member = chat_test.add_participant(
         chat_id=test_data_chat['chat_id'],
         creator_id=test_data_user['id'],
         user_id=test_data_user2['id'])
-    chat_test.chat_users_repo.add.assert_called()
+    chat_test.chat_users_repo.add.assert_called_once()
+    assert asdict(member) == test_data_chat_user
 
 
 def test_update_chat(chat_test):
@@ -105,8 +108,9 @@ def test_delete_chat(chat_test):
 
 
 def test_send_message(chat_test):
-    chat_test.send_message(**test_data_message)
+    message = chat_test.send_message(**test_data_message)
     chat_test.messages_repo.add.assert_called_once()
+    assert asdict(message) == test_data_message
 
 
 def test_leave_chat(chat_test):

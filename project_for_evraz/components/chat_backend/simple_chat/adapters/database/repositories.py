@@ -6,7 +6,7 @@ from classic.components import component
 from classic.sql_storage import BaseRepository
 
 from simple_chat.application import interfaces
-from simple_chat.application.dataclasses import User, Chat, Message, ChatUsers
+from simple_chat.application.dataclasses import User, Chat, Message, ChatUsers, ChatUsersShort
 
 
 @component
@@ -57,7 +57,8 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
         query = self.session.query(User, ChatUsers)
         query = query.join(User, User.id == ChatUsers.user_id)
         query = query.filter(ChatUsers.chat_id == chat_id)
-        return self.session.execute(query).scalars().all()
+        chat_users = self.session.execute(query).scalars().all()
+        return [ChatUsersShort(chat_user.chat_id, chat_user.user_id) for chat_user in chat_users]
 
     def get_by_id_user(self, user_id: int) -> Optional[List[Chat]]:
         chats = self.session.query(Chat.chat_title).filter_by(user_id=user_id).join(
@@ -67,6 +68,7 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
     def add(self, chat_users:ChatUsers):
         self.session.add(chat_users)
         self.session.flush()
+
 
     def delete(self, chat_id:int):
         query = delete(ChatUsers).where(ChatUsers.chat_id == chat_id)
