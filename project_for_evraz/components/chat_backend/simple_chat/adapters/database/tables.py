@@ -1,8 +1,5 @@
-import datetime
-
 from sqlalchemy import (
     Column,
-    Float,
     ForeignKey,
     Integer,
     MetaData,
@@ -20,11 +17,7 @@ naming_convention = {
     'pk': 'pk_%(table_name)s'
 }
 
-# даем имя схемы только для БД MSSQL, связано с инфраструктурными особенностями
-# metadata = MetaData(naming_convention=naming_convention, schema='app')
-
 metadata = MetaData(naming_convention=naming_convention)
-
 
 users = Table(
     'users',
@@ -49,7 +42,7 @@ messages = Table(
     Column('message_text', String, nullable=False),
     Column('sent_from', Integer, ForeignKey('users.id')),
     Column('sent_date', String, nullable=False),
-    Column('chat_id', Integer, ForeignKey('chats.chat_id'), nullable=False )
+    Column('chat_id', Integer, ForeignKey('chats.chat_id'), nullable=False)
 )
 
 chat_users = Table(
@@ -60,5 +53,3 @@ chat_users = Table(
     Column('user_id', Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False),
 
 )
-
-

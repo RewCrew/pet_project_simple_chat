@@ -18,7 +18,6 @@ join_point = join_points.join_point
 class UserInfo(DTO):
     name: str
     email: str
-    # id: Optional[int]
 
 
 #
@@ -101,7 +100,6 @@ class ChatService:
         self.chat_users_repo.add(chat_users)
         return chat
 
-
     #
     @join_point
     @validate_arguments
@@ -128,7 +126,7 @@ class ChatService:
         return chat
 
     @join_point
-    def add_participant(self, chat_id: int, creator_id: int, user_id: int)-> ChatUsersShort:
+    def add_participant(self, chat_id: int, creator_id: int, user_id: int) -> ChatUsersShort:
         chat = self.is_chat_exist(chat_id)
         if chat is None:
             raise errors.NoChat(chat_id=chat_id)

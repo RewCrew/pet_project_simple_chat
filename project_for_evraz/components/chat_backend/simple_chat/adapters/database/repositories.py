@@ -16,7 +16,7 @@ class UsersRepo(BaseRepository, interfaces.UsersRepo):
         self.session.flush()
         self.session.refresh(user)
         return user
-        
+
     def get_by_id(self, id_: int) -> Optional[User]:
         query = select(User).where(User.id == id_)
         return self.session.execute(query).scalars().one_or_none()
@@ -44,7 +44,6 @@ class ChatsRepo(BaseRepository, interfaces.ChatsRepo):
         self.session.flush()
         return chat
 
-
     def delete(self, chat: Chat):
         self.session.delete(chat)
         self.session.flush()
@@ -65,12 +64,11 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
             ChatUsers, Chat.chat_id == ChatUsers.chat_id)
         return chats.all()
 
-    def add(self, chat_users:ChatUsers):
+    def add(self, chat_users: ChatUsers):
         self.session.add(chat_users)
         self.session.flush()
 
-
-    def delete(self, chat_id:int):
+    def delete(self, chat_id: int):
         query = delete(ChatUsers).where(ChatUsers.chat_id == chat_id)
         self.session.execute(query)
         self.session.flush()
@@ -79,8 +77,8 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
         query = select(ChatUsers).where(ChatUsers.chat_id == chat_id, ChatUsers.user_id == user_id)
         return self.session.execute(query).scalars().one_or_none()
 
-    def leave_chat(self, chat_id:int, user_id:int):
-        query = delete(ChatUsers).where(ChatUsers.chat_id == chat_id, ChatUsers.user_id==user_id)
+    def leave_chat(self, chat_id: int, user_id: int):
+        query = delete(ChatUsers).where(ChatUsers.chat_id == chat_id, ChatUsers.user_id == user_id)
         self.session.execute(query)
         self.session.flush()
 
@@ -94,6 +92,6 @@ class MessagesRepo(BaseRepository, interfaces.MessagesRepo):
         self.session.refresh(message)
         return message
 
-    def get_messages(self, chat_id:int):
-        query = select(Message).where(Message.chat_id==chat_id)
+    def get_messages(self, chat_id: int):
+        query = select(Message).where(Message.chat_id == chat_id)
         return self.session.execute(query).scalars().all()
