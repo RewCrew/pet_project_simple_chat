@@ -28,20 +28,12 @@ entity user {
      email: str
 }
 
-entity chat_messages{
-    * **chat_messages_id** PK
-    * **message_id** FK
-    * **chat_id** FK
-}
 
 entity chat_users{
     * **chat_users_id** PK
     * **chat_id** FK
     * **user_id** FK
 }
-
-'chat_messages ||--|| message
-'chat_messages }o--|| chat
 
 chat_users }o--|| user
 chat_users }|--|| chat
