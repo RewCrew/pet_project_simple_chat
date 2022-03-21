@@ -2,8 +2,7 @@ import datetime
 
 import pytest
 from attr import asdict
-
-from simple_chat.application import services
+from simple_chat.application import services, errors
 
 
 @pytest.fixture(scope='function')
@@ -52,7 +51,7 @@ test_data_message = {
 }
 
 test_chat_update = {
-    'chat_id': 1,
+    'chat_id': 10,
     'creator': 1,
     'chat_title': 'testUpdate',
 }
@@ -128,3 +127,10 @@ def test_get_chat_messages(chat_test):
     messages = chat_test.get_messages(
         chat_id=test_data_chat['chat_id'], user_id=test_data_user['id'])
     assert asdict(messages) == test_data_get_messages
+
+
+def test_not_chat_creator(chat_test):
+    with pytest.raises(errors.NotCreator):
+        chat_test.add_participant(chat_id=test_data_chat['chat_id'],
+                                  creator_id=test_data_user2['id'],
+                                  user_id=test_data_user2['id'])

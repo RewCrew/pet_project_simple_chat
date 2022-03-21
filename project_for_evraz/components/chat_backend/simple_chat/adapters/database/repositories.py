@@ -57,7 +57,7 @@ class ChatUsersRepo(BaseRepository, interfaces.ChatUsersRepo):
         query = query.join(User, User.id == ChatUsers.user_id)
         query = query.filter(ChatUsers.chat_id == chat_id)
         chat_users = self.session.execute(query).scalars().all()
-        return [ChatUsersShort(chat_user.chat_id, chat_user.user_id) for chat_user in chat_users]
+        return [ChatUsersShort(chat_user.chat_id, chat_user.user_id) for chat_user in chat_users] ######## FIX!
 
     def get_by_id_user(self, user_id: int) -> Optional[List[Chat]]:
         chats = self.session.query(Chat.chat_title).filter_by(user_id=user_id).join(
