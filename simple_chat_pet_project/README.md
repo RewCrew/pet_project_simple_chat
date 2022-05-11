@@ -1,4 +1,4 @@
-EVRAZ Project (simple chat)
+Pet Project (simple chat)
 
 
 Libraries list based in setup.cfg
